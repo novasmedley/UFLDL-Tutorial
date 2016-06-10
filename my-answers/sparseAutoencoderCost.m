@@ -60,16 +60,26 @@ z2 = wb2*[a; ones(1,size(a,2))]; % add ones again to accomodate bias term
 
 h = sigmoid(z2); % output
 
-decay = (lambda/2)*( sum(sum(W1.^2)) + sum(sum(W2.^2)) ); % weighted decay without bias weights
-cost = (1/m)*(sum(sum(0.5*((h-data(1:visibleSize,:)).^2)))) + decay; % error
+%-------COST--------
+% sparsity penality
+p = (1/m)*sum(a,2); % activation weight average of training data
+KL = sparsityParam*log(sparsityParam./p) + (1-sparsityParam)*log((1-sparsityParam)./(1-p));
+penalty = beta*sum(KL);
 
+% weighted decay 
+decay = (lambda/2)*( sum(sum(W1.^2)) + sum(sum(W2.^2)) ); % without bias weights
+
+% total cost
+cost = (1/m)*(sum(sum(0.5*((h-data(1:visibleSize,:)).^2)))) + decay + penalty; 
 %-------BACKWARD--------
-% rho, sparsity parameter
+% sparsity penalty component of the derivative
+sSpar = beta*( (-sparsityParam./p) + ((1-sparsityParam)./(1-p)) );
+sSpar = repmat(sSpar,1,m);
 
 % "error term" for how "responsible" a node is to the output
 % using just the weights, not the bias terms
 s2 = -(data(1:visibleSize,:)-h).*(h.*(1-h));
-s1 = (wb2(:,1:hiddenSize)'*s2).*(a.*(1-a));
+s1 = (wb2(:,1:hiddenSize)'*s2 + sSpar).*(a.*(1-a)); % to sparsity penalty derivative
 
 % partial derivatives, or gradients, summed across samples during matrix
 % operation.
