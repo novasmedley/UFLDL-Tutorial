@@ -60,7 +60,7 @@ z2 = wb2*[a; ones(1,size(a,2))]; % add ones again to accomodate bias term
 
 h = sigmoid(z2); % output
 
-decay = (lambda/2)*( sum(sum(W1.^2)) + sum(sum(W2.^2)) );
+decay = (lambda/2)*( sum(sum(W1.^2)) + sum(sum(W2.^2)) ); % weighted decay without bias weights
 cost = (1/m)*(sum(sum(0.5*((h-data(1:visibleSize,:)).^2)))) + decay; % error
 
 %-------BACKWARD--------
