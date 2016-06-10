@@ -59,9 +59,13 @@ a = sigmoid(z1);
 z2 = wb2*[a; ones(1,size(a,2))]; % add ones again to accomodate bias term
 
 h = sigmoid(z2); % output
-cost = (1/m)*(sum(sum(0.5*((h-data(1:visibleSize,:)).^2)))); % error
+
+decay = (lambda/2)*( sum(sum(W1.^2)) + sum(sum(W2.^2)) );
+cost = (1/m)*(sum(sum(0.5*((h-data(1:visibleSize,:)).^2)))) + decay; % error
 
 %-------BACKWARD--------
+% rho, sparsity parameter
+
 % "error term" for how "responsible" a node is to the output
 % using just the weights, not the bias terms
 s2 = -(data(1:visibleSize,:)-h).*(h.*(1-h));
