@@ -42,23 +42,47 @@ b2grad = zeros(size(b2));
 % the gradient descent update to W1 would be W1 := W1 - alpha * W1grad, and similarly for W2, b1, b2. 
 % 
 
+% add 1's to accomodate extra bias term in wb matrices
+m = size(data,2);
+data = [data; ones(1,size(data,2))];
 
+%-------FORWARD--------
+% add bias to weight matrix
+wb1 = [W1 b1]; % horizontal concat
+wb2 = [W2 b2];
 
+% move to hidden layer
+z1 = wb1*data;
+a = sigmoid(z1);
 
+% move to final layer
+z2 = wb2*[a; ones(1,size(a,2))]; % add ones again to accomodate bias term
 
+h = sigmoid(z2); % output
+cost = (1/m)*(sum(sum(0.5*((h-data(1:visibleSize,:)).^2)))); % error
 
+%-------BACKWARD--------
+% "error term" for how "responsible" a node is to the output
+% using just the weights, not the bias terms
+s2 = -(data(1:visibleSize,:)-h).*(h.*(1-h));
+s1 = (wb2(:,1:hiddenSize)'*s2).*(a.*(1-a));
 
+% partial derivatives, or gradients, summed across samples during matrix
+% operation.
+d2 = s2*[a; ones(1,size(a,2))]'; % add ones again to accomodate bias term; % for weights moving from in hidden to output (W2)
+d1 = s1*data'; % for weights movingrom input to hidden (W1)
 
+% take the average partial derivatives for this iteration of wb1 and wb2,
+% because this is a full gradient descent. If it was a single sample at a
+% time, the gradient would be updated with each iteration, without
+% averaging since the weights are updated with each iteration. Here, the
+% weights are not being updated, so we would like to know what the general
+% direction should be.
+b2grad = (1/m)*d2(:,end);
+b1grad = (1/m)*d1(:,end);
 
-
-
-
-
-
-
-
-
-
+W2grad = (1/m)*(d2(:,1:hiddenSize)) + lambda*wb2(:,1:hiddenSize);
+W1grad = (1/m)*(d1(:,1:visibleSize)) + lambda*wb1(:,1:visibleSize);
 
 %-------------------------------------------------------------------
 % After computing the cost and gradient, we will convert the gradients back
@@ -67,15 +91,5 @@ b2grad = zeros(size(b2));
 
 grad = [W1grad(:) ; W2grad(:) ; b1grad(:) ; b2grad(:)];
 
-end
-
-%-------------------------------------------------------------------
-% Here's an implementation of the sigmoid function, which you may find useful
-% in your computation of the costs and the gradients.  This inputs a (row or
-% column) vector (say (z1, z2, z3)) and returns (f(z1), f(z2), f(z3)). 
-
-function sigm = sigmoid(x)
-  
-    sigm = 1 ./ (1 + exp(-x));
 end
 

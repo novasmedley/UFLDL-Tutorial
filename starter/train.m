@@ -15,12 +15,12 @@
 %  change the parameters below.
 
 visibleSize = 8*8;   % number of input units 
-hiddenSize = 25;     % number of hidden units 
+hiddenSize = 2 ;% 10;     % number of hidden units 
 sparsityParam = 0.01;   % desired average activation of the hidden units.
                      % (This was denoted by the Greek alphabet rho, which looks like a lower-case "p",
 		     %  in the lecture notes). 
-lambda = 0.0001;     % weight decay parameter       
-beta = 3;            % weight of sparsity penalty term       
+lambda = 0;% 0.0001;     % weight decay parameter       
+beta = 0;% 3;            % weight of sparsity penalty term       
 
 %%======================================================================
 %% STEP 1: Implement sampleIMAGES
@@ -62,8 +62,10 @@ theta = initializeParameters(hiddenSize, visibleSize);
 %  final submission of the visualized weights, please use parameters we 
 %  gave in Step 0 above.
 
+% [cost, grad] = sparseAutoencoderCost(theta, visibleSize, hiddenSize, lambda, ...
+%                                      sparsityParam, beta, patches);
 [cost, grad] = sparseAutoencoderCost(theta, visibleSize, hiddenSize, lambda, ...
-                                     sparsityParam, beta, patches);
+                                     sparsityParam, beta, patches(:,1:10));
 
 %%======================================================================
 %% STEP 3: Gradient Checking
@@ -79,10 +81,17 @@ checkNumericalGradient();
 
 % Now we can use it to check your cost function and derivative calculations
 % for the sparse autoencoder.  
+
+% training parameters
 numgrad = computeNumericalGradient( @(x) sparseAutoencoderCost(x, visibleSize, ...
                                                   hiddenSize, lambda, ...
                                                   sparsityParam, beta, ...
-                                                  patches), theta);
+                                                  patches(:,1:10)), theta);
+                                              
+% numgrad = computeNumericalGradient( @(x) sparseAutoencoderCost(x, visibleSize, ...
+%                                                   hiddenSize, lambda, ...
+%                                                   sparsityParam, beta, ...
+%                                                   patches), theta);
 
 % Use this to visually compare the gradients side by side
 disp([numgrad grad]); 
