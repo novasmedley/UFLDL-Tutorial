@@ -17,7 +17,8 @@ pred = zeros(1, size(data, 2));
 
 
 
-
+h = theta*data;
+[M pred] = max(h,[],1);
 
 
 
