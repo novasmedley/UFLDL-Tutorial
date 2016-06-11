@@ -14,7 +14,14 @@ b1 = theta(2*hiddenSize*visibleSize+1:2*hiddenSize*visibleSize+hiddenSize);
 %% ---------- YOUR CODE HERE --------------------------------------
 %  Instructions: Compute the activation of the hidden layer for the Sparse Autoencoder.
 
+% concat weights and bias term
+wb1 = [W1 b1]; % horizontal concat
 
+% accomodate bias terms in data, note that bias term is last in wb1
+data = [data; ones(1, size(data,2))]; %vertical concat
+
+
+activation = sigmoid(wb1*data);
 %-------------------------------------------------------------------
 
 end
