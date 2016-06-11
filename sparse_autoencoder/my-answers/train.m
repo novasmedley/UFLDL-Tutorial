@@ -1,4 +1,4 @@
-%% CS294A/CS294W Programming Assignment Starter Code
+% CS294A/CS294W Programming Assignment Starter Code
 
 %  Instructions
 %  ------------
