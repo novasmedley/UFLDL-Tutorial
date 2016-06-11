@@ -23,12 +23,17 @@ thetagrad = zeros(numClasses, inputSize);
 %                You need to compute thetagrad and cost.
 %                The groundTruth matrix might come in handy.
 
+% ---------- Cost ----------
+% hypothesis matrix, normalized
+h = exp(theta*data);
+normConstant = 1./sum(h,1);
+h = bsxfun(@times,normConstant,h);
 
+cost = ( -1/numCases )*( sum(sum(groundTruth.*log(h))) );
 
+% ---------- Gradient ----------
 
-
-
-
+thetagrad = ( -1/numCases )*( (groundTruth-h)*data' );
 
 
 
