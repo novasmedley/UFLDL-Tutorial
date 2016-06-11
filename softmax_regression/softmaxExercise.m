@@ -20,7 +20,7 @@
 inputSize = 28 * 28; % Size of input vector (MNIST images are 28x28)
 numClasses = 10;     % Number of classes (MNIST images fall into 10 classes)
 
-lambda = 0;% 1e-4; % Weight decay parameter
+lambda = 1e-4; % Weight decay parameter
 
 %%======================================================================
 %% STEP 1: Load data

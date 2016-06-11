@@ -24,16 +24,20 @@ thetagrad = zeros(numClasses, inputSize);
 %                The groundTruth matrix might come in handy.
 
 % ---------- Cost ----------
+
 % hypothesis matrix, normalized
 h = exp(theta*data);
 normConstant = 1./sum(h,1);
 h = bsxfun(@times,normConstant,h);
 
-cost = ( -1/numCases )*( sum(sum(groundTruth.*log(h))) );
+% decay
+decay = ( lambda/2 )*( sum(sum(theta.^2)) );
+
+cost = ( -1/numCases )*( sum(sum(groundTruth.*log(h))) ) + decay;
 
 % ---------- Gradient ----------
 
-thetagrad = ( -1/numCases )*( (groundTruth-h)*data' );
+thetagrad = ( -1/numCases )*( (groundTruth-h)*data' ) + lambda.*theta;
 
 
 
