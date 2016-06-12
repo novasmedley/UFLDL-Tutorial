@@ -127,10 +127,14 @@ softmaxModel = struct;
 numClasses = 5; % 0-4 digits
 regression_lambda = 1e-4; % Weight decay parameter
 
-% use activation layer and bias 
+% softmaxModel = softmaxTrain(hiddenSize, numClasses, regression_lambda, ...
+%                             trainFeatures, trainLabels,options);
 
-softmaxModel = softmaxTrain(hiddenSize, numClasses, regression_lambda, ...
-                            trainFeatures, trainLabels,options);
+% use activation layer AND bias term
+regression_inputSize = hiddenSize+1;
+regression_trainFeatures = [trainFeatures; ones(1,size(trainFeatures,2))];
+softmaxModel = softmaxTrain(regression_inputSize, numClasses, regression_lambda, ...
+                            regression_trainFeatures, trainLabels,options);
 
 %% -----------------------------------------------------
 
@@ -142,7 +146,14 @@ softmaxModel = softmaxTrain(hiddenSize, numClasses, regression_lambda, ...
 % Compute Predictions on the test set (testFeatures) using softmaxPredict
 % and softmaxModel
 
-pred = softmaxPredict(softmaxModel, testFeatures);
+% pred = softmaxPredict(softmaxModel, testFeatures);
+
+% features are activation terms AND the bias term
+% with bias term makes accuracy = 98.287358%
+% without bias term makes accuracy = 98.293895%, so better by 0.0065%
+
+testFeats = [testFeatures; ones(1,size(testFeatures,2))];
+pred = softmaxPredict(softmaxModel, testFeats);
 
 
 
