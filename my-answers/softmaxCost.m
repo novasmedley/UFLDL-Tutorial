@@ -1,4 +1,4 @@
-function [cost, grad] = softmaxCost(theta, numClasses, inputSize, lambda, data, labels)
+function [cost, grad, prob] = softmaxCost(theta, numClasses, inputSize, lambda, data, labels)
 
 % numClasses - the number of classes 
 % inputSize - the size N of the input vector
@@ -39,7 +39,7 @@ cost = ( -1/numCases )*( sum(sum(groundTruth.*log(h))) ) + decay;
 
 thetagrad = ( -1/numCases )*( (groundTruth-h)*data' ) + lambda.*theta;
 
-
+prob = h;
 
 
 
