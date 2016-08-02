@@ -2,3 +2,5 @@
 
 # Matlab
 *.m~
+
+*/*.mat
